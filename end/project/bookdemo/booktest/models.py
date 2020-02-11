@@ -13,7 +13,7 @@ class Book(models.Model):
     """
     title = models.CharField(max_length=20)
     pub_date = models.DateField(default="2020-02-11")
-
+    price = models.FloatField(default=0)
 
 class Hero(models.Model):
     """
@@ -21,7 +21,6 @@ class Hero(models.Model):
     """
     name = models.CharField(max_length=20)
     gender = models.CharField(max_length=6, choices=(('male', '男'), ('female', '女')), default='male')
-    price = models.FloatField(default=0)
     content = models.CharField(max_length=100)
     # book 是一对多中的外键 on_delete代表删除主表数据是如何删除
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
