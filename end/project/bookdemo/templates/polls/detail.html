@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>选项列表</title>
+</head>
+<body>
+    <div>
+
+        <h2>{{question.title}}</h2>
+        <h3>选项有:</h3>
+        <form action="" method="post">
+                {% for c in question.choices.all  %}
+                {% if forloop.counter == 1 %}
+                 <li><input type="radio" checked name="num" value="{{c.id}}">{{c.content}}</li>
+                {% else %}
+                <li><input type="radio" name="num" value="{{c.id}}">{{c.content}}</li>
+                {% endif %}
+                {% endfor %}
+        <input type="submit"value="投票">
+        </form>
+
+        <a href="{% url 'polls:index' %}">返回</a>
+    </div>
+</body>
+</html>

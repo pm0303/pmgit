@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>投票列表</title>
+</head>
+<body>
+<div>
+    <ul>
+        {% for q in question %}
+        <li><a href="{% url 'polls:detail' q.id %}"> {{forloop.counter}}.{{q.title}}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>

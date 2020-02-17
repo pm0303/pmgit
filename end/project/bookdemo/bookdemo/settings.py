@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 使用应用中的模型需要 注册
     'booktest',
-    # 'polls'
+    'polls'
 ]
 
 
