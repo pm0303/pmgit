@@ -21,14 +21,14 @@
             {# <a href="/detail/{{book.id}}/"><li>{{book.id}} {{book.title}} {{book.price}}</li></a>#}
 
 
-            <li><a href="{% url 'booktest:detail' book.id %}">{{book.id}} {{book.title}} {{book.price}}</a>
-                <a href="{% url 'booktest:deletebook' book.id %}"><button>删除</button></a><a href="{% url 'booktest:editbook' book.id %}"><button>编辑</button></a></li>
+            <li><a href="{% url 'booktest:detail' book.id %}">{{book.id}} {{book.title}} {{book.price}} {{ book.pub_date }}</a>
+                <a href="{% url 'booktest:deletebook' book.id %}"><button style="color:black">删除</button></a>&nbsp;&nbsp;&nbsp;<a href="{% url 'booktest:editbook' book.id %}"><button style="color:black">编辑</button></a></li>
             {% endfor %}
         </ul>
 
 
     </div>
-    <a href="{% url 'booktest:addbook' %}"><button>添加书籍</button></a>
+    <a href="{% url 'booktest:addbook' %}"><button style="color:black">添加书籍</button></a>
 
 </div>
 </body>

@@ -15,7 +15,7 @@ def index(request):
     # template = loader.get_template('index.html')
     # # 2.渲染模板数据
     books = Book.objects.all()
-    context = {"books", books}
+    # context = {"books", books}
     # result = template.render(context)
     # # 3.将渲染的结果使用HttpResponse
     # return HttpResponse(result)

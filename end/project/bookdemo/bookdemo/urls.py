@@ -46,6 +46,7 @@ urlpatterns = [
     # 使用path将booktest得路由 进行包含
     # path('booktest/', include('booktest.urls'))
     path('', include('booktest.urls', namespace='booktest'))
+    # path('', include('polls.urls', namespace='polls'))
 ]
 
 # 项目的所有路由地址配置文件
