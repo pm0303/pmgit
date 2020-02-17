@@ -25,9 +25,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '18=5vt=klg*%=(df1-_n*3+6h-(&*sx!bo#bj@qs+1_^1_r4+z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*',]
 
 
 # Application definition
@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 使用应用中的模型需要 注册
     'booktest',
-    'polls'
+    'polls',
+    'download'
 ]
 
 
