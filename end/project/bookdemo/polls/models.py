@@ -1,7 +1,12 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
 # Create your models here.
+class User(AbstractUser):
+    telephone = models.CharField(max_length=11, verbose_name="手机号"),
+    questions = models.ManyToManyField('Qusetion')
+
 
 class Qusetion(models.Model):
     title = models.CharField(max_length=50, verbose_name="投票问题")
@@ -18,7 +23,7 @@ class Qusetion(models.Model):
 
 class Choices(models.Model):
     content = models.CharField(max_length=50, verbose_name="选项")
-    votes = models.PositiveIntegerField(verbose_name="得票数",default=0)
+    votes = models.PositiveIntegerField(verbose_name="得票数", default=0)
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
     question = models.ForeignKey(Qusetion, on_delete=models.CASCADE, related_name="choices", verbose_name="所属问题")
 

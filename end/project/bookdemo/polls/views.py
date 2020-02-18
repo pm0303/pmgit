@@ -3,6 +3,55 @@ from django.http import HttpResponse
 from .models import *
 # Create your views here.
 from django.views.generic import View, TemplateView, ListView, CreateView, DeleteView, UpdateView, DetailView as DV
+from django.contrib.auth import authenticate, login as lin, logout as lot
+
+
+def login(request):
+    if request.method == "GET":
+        return render(request, 'polls/login.html')
+    elif request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        # 可以使用Django自带的用户认证系统
+        user = authenticate(username=username, password=password)
+        if user:
+            lin(request, user)
+            next = request.GET.get("next")
+            if next:
+                url = next
+            else:
+                url = reverse("polls:index")
+            return redirect(to=url)
+        else:
+            url = reverse("polls:login")
+            return redirect(to=url)
+    # return HttpResponse("登录")
+
+
+def loginout(request):
+    # 调用Django的登出方法 目的是删除cookie
+    lot(request)
+    url = reverse("polls:index")
+    return redirect(to=url)
+
+
+def regist(request):
+    if request.method == "GET":
+        return render(request, 'polls/regist.html')
+    else:
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        password2 = request.POST.get("password2")
+        if User.objects.filter(username=username).count() > 0:
+            return HttpResponse("用户名不存在")
+        else:
+            if password == password2:
+                User.objects.create_user(username=username, password=password)
+                url = reverse("polls:login")
+                return redirect(to=url)
+
+            else:
+                return HttpResponse("密码不一致")
 
 
 def index(request):
@@ -30,20 +79,38 @@ class IndexView(ListView):
 def detail(request, qid):
     print(qid, "+++")
     if request.method == "GET":
-        try:
-            question = Qusetion.objects.get(id=qid)
-            print(question, "--")
-            return render(request, 'polls/detail.html', {"question": question})
+        print("当前用户为", request.user)
+        if request.user and request.user.username != "":
+            #     已经登录过了
+            print(request.user.questions.all())
+            try:
+                question = Qusetion.objects.get(id=qid)
+                if question in request.user.questions.all():
+                    # print("投过票")
+                    url = reverse("polls:result", args=(qid))
+                    return redirect(to=url)
 
-        except Exception as e:
-            print(e)
-            return HttpResponse("问题不合法")
+                else:
+                    try:
+                        # question = Qusetion.objects.get(id=qid)
+                        print(question, "--")
+                        return render(request, 'polls/detail.html', {"question": question})
+
+                    except Exception as e:
+                        print(e)
+                        return HttpResponse("问题不合法")
+            except Exception as e:
+                print(e)
+        else:
+            url = reverse("polls:login")+"?next=/polls/detail/"+qid+"/"
+            return redirect(to=url)
     elif request.method == "POST":
         choiceid = request.POST.get("num")
         try:
             choice = Choices.objects.get(id=choiceid)
             choice.votes += 1
             choice.save()
+            request.user.questions.add(Qusetion.objects.get(id=qid))
             # 返回当前投票问题的投票结果页
             url = reverse("polls:result", args=(qid,))
             # 投票成功 返回投票结果
@@ -54,8 +121,9 @@ def detail(request, qid):
 
     # return HttpResponse("详情页"+qid)
 
+
 class DetailView(View):
-    def get(self,request,qid):
+    def get(self, request, qid):
         try:
             question = Qusetion.objects.get(id=qid)
             print(question, "--")
@@ -64,7 +132,8 @@ class DetailView(View):
         except Exception as e:
             print(e)
             return HttpResponse("问题不合法")
-    def post(self,request,qid):
+
+    def post(self, request, qid):
         choiceid = request.POST.get("num")
         try:
             choice = Choices.objects.get(id=choiceid)
@@ -87,9 +156,10 @@ def result(request, qid):
         print(e)
         return HttpResponse("问题不合法")
 
+
 class ResultView(DV):
     # 方法一: 继承View
-    def get(self,request,qid):
+    def get(self, request, qid):
         try:
             question = Qusetion.objects.get(id=qid)
             return render(request, 'polls/result.html', {"question": question})

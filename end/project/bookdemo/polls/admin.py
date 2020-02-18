@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Qusetion, Choices
+from .models import Qusetion, Choices,User
 
 
 class ChoiceInline(admin.StackedInline):
@@ -24,3 +24,4 @@ class QuestionAdmin(admin.ModelAdmin):
 
 admin.site.register(Qusetion, QuestionAdmin)
 admin.site.register(Choices, ChoicesAdmin)
+admin.site.register(User)

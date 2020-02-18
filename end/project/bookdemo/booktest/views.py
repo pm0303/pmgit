@@ -107,6 +107,7 @@ def edithero(request, heroid):
         hero.gender = request.POST.get("sex")
         hero.save()
         url = reverse("booktest:detail", args=(hero.book.id,))
+        print(hero.book.id)
         return  redirect(to=url)
 # 使用django模板
 # MVT
