@@ -33,3 +33,4 @@ class Comment(models.Model):
     body = models.CharField(max_length=500, verbose_name="评论内容")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="评论时间")
     article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name="所属文章")
+    url = models.URLField(default="http://www.pm.com",verbose_name="个人主页")
