@@ -9,7 +9,7 @@
     {% block header %}
     <div>
         {% if request.user and request.user.username != '' %}
-        {{request.user.name}}<a href="{% url 'polls:loginout' %}">退出</a>
+        {{request.user.username}}<a href="{% url 'polls:loginout' %}">退出</a>
         {% else %}
             <a href="{% url 'polls:login' %}">登录</a><a href="{% url 'polls:regist' %}">注册</a>
         {% endif %}

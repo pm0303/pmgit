@@ -4,12 +4,22 @@ from .models import *
 # Create your views here.
 from django.views.generic import View, TemplateView, ListView, CreateView, DeleteView, UpdateView, DetailView as DV
 from django.contrib.auth import authenticate, login as lin, logout as lot
+from .forms import *
 
 
+# 登录
 def login(request):
     if request.method == "GET":
+        # lf = LoginForm()
+        # return render(request, 'polls/login.html', {"lf": lf})
+        # 方法一html中form表单
         return render(request, 'polls/login.html')
     elif request.method == "POST":
+        # lf = LoginForm(data=request.POST)
+        # if lf.is_valid():
+        #     username = lf.cleaned_data["username"]
+        #     password = lf.cleaned_data["password"]
+
         username = request.POST.get("username")
         password = request.POST.get("password")
         # 可以使用Django自带的用户认证系统
@@ -23,11 +33,15 @@ def login(request):
                 url = reverse("polls:index")
             return redirect(to=url)
         else:
-            url = reverse("polls:login")
-            return redirect(to=url)
+            # url = reverse("polls:login")
+            # return redirect(to=url)
+            return render(request, "polls/login.html", {"errors": "用户密码不匹配"})
+        # else:
+        #     return HttpResponse("未知错误")
     # return HttpResponse("登录")
 
 
+# 退出
 def loginout(request):
     # 调用Django的登出方法 目的是删除cookie
     lot(request)
@@ -35,24 +49,41 @@ def loginout(request):
     return redirect(to=url)
 
 
+# 注册
 def regist(request):
     if request.method == "GET":
+        #1. 使用html 生成表单
         return render(request, 'polls/regist.html')
+        # 3.使用模型表单类
+        # rf =  RegistForm()
+        # return render(request,'polls/regist.html',{"rf":rf})
+
     else:
+        # rf = RegistForm(request.POST)
+        # if rf.is_valid():
+        #     print(rf,"++")
+        #     username = rf.cleaned_data["username"]
+        #     password = rf.cleaned_data["password"]
+        #     password2 = rf.cleaned_data["password2"]
         username = request.POST.get("username")
         password = request.POST.get("password")
         password2 = request.POST.get("password2")
         if User.objects.filter(username=username).count() > 0:
-            return HttpResponse("用户名不存在")
+            # return HttpResponse("用户名已存在")
+            return render(request, 'polls/regist.html', {"errors": "用户名已存在"})
         else:
             if password == password2:
                 User.objects.create_user(username=username, password=password)
+                # rf.save()
                 url = reverse("polls:login")
+
                 return redirect(to=url)
 
             else:
-                return HttpResponse("密码不一致")
-
+                # return HttpResponse("密码不一致")
+                return render(request, 'polls/regist.html', {"errors": "密码不一致"})
+        # else:
+        #     return HttpResponse("未知错误")
 
 def index(request):
     question = Qusetion.objects.all()
@@ -76,6 +107,7 @@ class IndexView(ListView):
     #     return {"questions":Question.objects.all()}
 
 
+# 详情页
 def detail(request, qid):
     print(qid, "+++")
     if request.method == "GET":
@@ -102,7 +134,7 @@ def detail(request, qid):
             except Exception as e:
                 print(e)
         else:
-            url = reverse("polls:login")+"?next=/polls/detail/"+qid+"/"
+            url = reverse("polls:login") + "?next=/polls/detail/" + qid + "/"
             return redirect(to=url)
     elif request.method == "POST":
         choiceid = request.POST.get("num")
@@ -148,6 +180,7 @@ class DetailView(View):
             return HttpResponse("选项不合法")
 
 
+# 结果页
 def result(request, qid):
     try:
         question = Qusetion.objects.get(id=qid)

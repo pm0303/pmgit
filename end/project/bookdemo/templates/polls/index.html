@@ -7,4 +7,5 @@
         <li><a href="{% url 'polls:detail' q.id %}"> {{forloop.counter}}.{{q.title}}</a></li>
         {% endfor %}
     </ul>
+<a href="{% url 'booktest:index' %}"><button>返回</button></a>
 {% endblock %}
