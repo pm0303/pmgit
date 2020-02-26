@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blogapp',
-    'DjangoUeditor'
+    'DjangoUeditor',
+    'haystack'
 ]
 
 MIDDLEWARE = [
@@ -123,8 +124,18 @@ STATIC_URL = '/static/'
 # 配置静态文件
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-
 # 因为要上传图片所以需要配置媒体资源
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIAFILES_DIRS = [os.path.join(BASE_DIR, 'media')]
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'blogapp.whoosh_cn_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
+
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

@@ -22,7 +22,7 @@ from .settings import MEDIA_ROOT
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
-
+    url(r'^search/', include('haystack.urls')),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
     path('', include('blogapp.urls', namespace='blogapp')),
 ]
